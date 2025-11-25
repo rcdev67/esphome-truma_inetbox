@@ -15,7 +15,7 @@ namespace truma_inetbox {
 
 static const char *const TAG = "truma_inetbox.LinBusListener";
 
-// früher: (portTickType) portMAX_DELAY  -> portTickType existiert nicht mehr
+// früher: (portTickType) portMAX_DELAY
 #define QUEUE_WAIT_BLOCKING (TickType_t) portMAX_DELAY
 
 void LinBusListener::setup_framework() {
@@ -35,7 +35,7 @@ void LinBusListener::setup_framework() {
       10;  // UART_TOUT_THRESH_DEFAULT,  //10 works well for my short messages I need send/receive
   uart_intr.txfifo_empty_intr_thresh = 10;  // UART_EMPTY_THRESH_DEFAULT
 
-  // uart_num ist uint8_t, uart_intr_config erwartet uart_port_t
+  // uart_num ist uint8_t, Funktion erwartet uart_port_t
   uart_intr_config(static_cast<uart_port_t>(uart_num), &uart_intr);
 
   // Creating UART event Task
