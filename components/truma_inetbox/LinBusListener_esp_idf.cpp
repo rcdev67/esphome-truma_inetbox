@@ -7,7 +7,7 @@
 #define ESPHOME_UART uart::truma_IDFUARTComponent
 #else
 #define ESPHOME_UART uart::IDFUARTComponent
-#endif // CUSTOM_ESPHOME_UART
+#endif  // CUSTOM_ESPHOME_UART
 #include "esphome/components/uart/uart_component_esp_idf.h"
 
 namespace esphome {
@@ -15,7 +15,8 @@ namespace truma_inetbox {
 
 static const char *const TAG = "truma_inetbox.LinBusListener";
 
-#define QUEUE_WAIT_BLOCKING (portTickType) portMAX_DELAY
+// früher: (portTickType) portMAX_DELAY  -> portTickType existiert nicht mehr
+#define QUEUE_WAIT_BLOCKING (TickType_t) portMAX_DELAY
 
 void LinBusListener::setup_framework() {
   // uartSetFastReading
@@ -33,7 +34,9 @@ void LinBusListener::setup_framework() {
   uart_intr.rx_timeout_thresh =
       10;  // UART_TOUT_THRESH_DEFAULT,  //10 works well for my short messages I need send/receive
   uart_intr.txfifo_empty_intr_thresh = 10;  // UART_EMPTY_THRESH_DEFAULT
-  uart_intr_config(uart_num, &uart_intr);
+
+  // uart_num ist uint8_t, uart_intr_config erwartet uart_port_t
+  uart_intr_config(static_cast<uart_port_t>(uart_num), &uart_intr);
 
   // Creating UART event Task
   xTaskCreatePinnedToCore(LinBusListener::uartEventTask_,
